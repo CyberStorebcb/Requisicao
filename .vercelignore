@@ -1,0 +1,4 @@
+// Vercel: Ignora node_modules e dist do controle de versionamento
+node_modules
+backend/node_modules
+dist

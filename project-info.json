@@ -1,0 +1,64 @@
+{
+  "name": "sistema-requisicoes-cgb",
+  "version": "1.0.0",
+  "description": "Sistema de Requisições de Materiais e Pendências - CGB Engenharia",
+  "author": "Italo Fontes",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyberStorebcb/sistema-requisicoes.git"
+  },
+  "homepage": "https://github.com/CyberStorebcb/sistema-requisicoes#readme",
+  "bugs": {
+    "url": "https://github.com/CyberStorebcb/sistema-requisicoes/issues"
+  },
+  "keywords": [
+    "quasar",
+    "vue3",
+    "nodejs",
+    "postgresql",
+    "requisicoes",
+    "materiais",
+    "pendencias",
+    "cgb-engenharia"
+  ],
+  "tech_stack": {
+    "frontend": {
+      "framework": "Quasar Framework v2.18.2",
+      "vue": "Vue 3.4.18",
+      "router": "Vue Router 4",
+      "build": "Vite",
+      "ui": "Quasar Components"
+    },
+    "backend": {
+      "runtime": "Node.js",
+      "framework": "Express.js",
+      "database": "PostgreSQL",
+      "orm": "Native PostgreSQL Client",
+      "file_upload": "Multer",
+      "validation": "express-validator"
+    },
+    "deployment": {
+      "frontend": "Vercel",
+      "database": "Neon DB (PostgreSQL)",
+      "local_db": "PostgreSQL"
+    }
+  },
+  "features": [
+    "Sistema de requisições de materiais",
+    "Gestão de pendências com upload de imagens",
+    "Pesquisa de colaboradores por chapa/nome",
+    "Validação de dias úteis para requisições",
+    "Dashboard de aprovação/rejeição",
+    "API RESTful completa",
+    "Interface responsiva",
+    "Banco PostgreSQL com migrações"
+  ],
+  "colaboradores_cadastrados": 64,
+  "pages": [
+    "Requisição de Materiais",
+    "Lista de Requisições",
+    "Gestão de Pendências",
+    "Dashboard de Gestão"
+  ]
+}
