@@ -2,68 +2,97 @@
   <q-page class="sis-bg" padding>
     <div class="q-pa-md flex flex-center">
       <div class="sis-container">
-        <h4 class="sis-title text-h4 q-mb-lg">
-          SIS - AVISOS <span class="sis-dropbox">(Dropbox)</span>
-        </h4>
-        <q-card class="sis-card">
+        <q-card v-if="!autenticado" class="q-pa-xl q-mt-xl sis-card" style="max-width: 400px">
           <q-card-section>
-            <div class="sis-section-title text-subtitle1 q-mb-md">
-              Registros da aba <b>AVISOS</b> da planilha Dropbox
-            </div>
-            <div class="row q-gutter-md q-mb-md sis-filtros-row">
-              <div class="col-12 col-md-4">
-                <q-input
-                  v-model="search"
-                  label="Pesquisar"
-                  dense
-                  clearable
-                  debounce="300"
-                  @update:model-value="aplicarFiltro"
-                  class="sis-filtro-input"
-                  color="primary"
-                  outlined
-                  rounded
-                  placeholder="Digite para buscar..."
-                  prefix-icon="search"
-                />
-              </div>
-              <div v-for="col in filterableColumns" :key="col.name" class="col-12 col-md-2">
-                <q-select
-                  v-model="filtros[col.name]"
-                  :options="opcoesFiltro(col.name)"
-                  :label="col.label"
-                  dense
-                  clearable
-                  use-input
-                  input-debounce="0"
-                  @update:model-value="aplicarFiltro"
-                  emit-value
-                  map-options
-                  new-value-mode="add"
-                  class="sis-filtro-select"
-                  color="primary"
-                  outlined
-                  rounded
-                  placeholder="Filtrar..."
-                />
-              </div>
-            </div>
-            <div v-if="errorMsg" class="text-negative q-mb-md">{{ errorMsg }}</div>
-            <q-table
-              v-else
-              :rows="registrosFiltrados"
-              :columns="columns"
-              row-key="__rowNum__"
-              flat
-              bordered
-              :loading="loading"
-              wrap-cells
-              class="sis-table"
+            <div class="text-h6 q-mb-md">Acesso restrito</div>
+            <q-input
+              v-model="senha"
+              label="Digite a senha para acessar"
+              type="password"
+              outlined
+              rounded
               color="primary"
-            >
-            </q-table>
+              @keyup.enter="verificarSenha"
+              :error="senhaErrada"
+              :error-message="senhaErrada ? 'Senha incorreta' : ''"
+            />
+            <q-btn class="q-mt-md" color="primary" label="Entrar" @click="verificarSenha" />
           </q-card-section>
         </q-card>
+        <template v-else>
+          <h4 class="sis-title text-h4 q-mb-lg">
+            SIS - AVISOS <span class="sis-dropbox">(Dropbox)</span>
+          </h4>
+          <q-card class="sis-card">
+            <q-card-section>
+              <div class="sis-section-title text-subtitle1 q-mb-md">
+                Registros da aba <b>AVISOS</b> da planilha Dropbox
+              </div>
+              <div class="row q-gutter-md q-mb-md sis-filtros-row">
+                <div class="q-col-xs-12 q-col-sm-6 q-col-md-4">
+                  <q-input
+                    v-model="search"
+                    label="Pesquisar"
+                    aria-label="Pesquisar registros"
+                    dense
+                    clearable
+                    debounce="300"
+                    @update:model-value="aplicarFiltro"
+                    class="sis-filtro-input"
+                    color="primary"
+                    outlined
+                    rounded
+                    placeholder="Digite para buscar..."
+                    prefix-icon="search"
+                  />
+                </div>
+                <div
+                  v-for="col in filterableColumns"
+                  :key="col.name"
+                  class="q-col-xs-12 q-col-sm-6 q-col-md-2"
+                >
+                  <q-select
+                    v-model="filtros[col.name]"
+                    :options="opcoesFiltro(col.name)"
+                    :label="col.label"
+                    aria-label="Filtrar por {{ col.label }}"
+                    dense
+                    clearable
+                    use-input
+                    input-debounce="0"
+                    @update:model-value="aplicarFiltro"
+                    emit-value
+                    map-options
+                    new-value-mode="add"
+                    class="sis-filtro-select"
+                    color="primary"
+                    outlined
+                    rounded
+                    placeholder="Filtrar..."
+                  />
+                </div>
+              </div>
+              <div v-if="errorMsg" class="text-negative q-mb-md">{{ errorMsg }}</div>
+              <div v-else class="sis-table-wrapper" tabindex="0" aria-label="Tabela de avisos">
+                <q-table
+                  :rows="registrosFiltrados"
+                  :columns="columns"
+                  row-key="__rowNum__"
+                  flat
+                  bordered
+                  :loading="loading"
+                  wrap-cells
+                  class="sis-table q-table--dense"
+                  color="primary"
+                  :rows-per-page-options="[10, 20, 50]"
+                  :pagination="{ rowsPerPage: 10 }"
+                  table-class="q-table__responsive"
+                >
+                </q-table>
+              </div>
+            </q-card-section>
+          </q-card>
+        </template>
       </div>
     </div>
   </q-page>
@@ -71,6 +100,19 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+
+const senha = ref('')
+const senhaErrada = ref(false)
+const autenticado = ref(false)
+
+function verificarSenha() {
+  if (senha.value === '91278535') {
+    autenticado.value = true
+    senhaErrada.value = false
+  } else {
+    senhaErrada.value = true
+  }
+}
 
 const registros = ref([])
 const loading = ref(false)
@@ -302,11 +344,17 @@ onMounted(() => {
   border-radius: 8px;
   box-shadow: 0 1px 4px 0 #e3f2fd;
 }
+.sis-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .sis-table {
   background: #fff;
   border-radius: 10px;
   font-size: 15px;
   box-shadow: 0 2px 8px 0 #e3f2fd;
+  min-width: 700px;
 }
 .sis-table thead tr th {
   background: #1976d2;
